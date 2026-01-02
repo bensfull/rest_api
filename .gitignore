@@ -1,1 +1,16 @@
-.venv
+# Ambientes Virtuais
+.venv/
+venv/
+env/
+
+# Banco de Dados Local
+db.sqlite3
+
+# Python e Cache
+__pycache__/
+*.pyc
+.python-version
+
+# Configurações de Editor
+.vscode/
+.idea/
