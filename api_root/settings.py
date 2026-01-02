@@ -39,7 +39,9 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "api_rest",
     "rest_framework",
-    "corsheaders"
+    'rest_framework.authtoken', # Adicione esta linha
+    "corsheaders",
+    "drf_spectacular",
 ]
 
 MIDDLEWARE = [
@@ -125,3 +127,12 @@ STATIC_URL = "static/"
 CORS_ALLOW_ORIGINS =[
     'http://localhost:8080'
 ]
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    # Adicione estas linhas abaixo:
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+}

@@ -3,7 +3,13 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from .models import User
-from .serializers import UserSerializer
+from .serializers import UserSerializer, PostSerializer
+
+
+# Documentação (Swagger): Para que outros desenvolvedores saibam como usar sua API sem precisar ler todo o seu código Python.
+from drf_spectacular.utils import extend_schema
+
+
 
 import json
 
@@ -142,4 +148,22 @@ def user_manager(request):
         except:
             return Response(status=status.HTTP_400_BAD_REQUEST)
     
+
+@extend_schema(request=PostSerializer) # Isso diz ao Swagger para mostrar os campos do Post
+@api_view(['POST'])
+def create_post(request):
+    if request.method == 'POST':
+        serializer = PostSerializer(data=request.data)
         
+        if serializer.is_valid():
+            # Aqui precisamos dizer quem é o autor do post manualmente
+            # assumindo que o nickname vem no corpo do request
+            nickname = request.data.get('autor_nickname')
+            try:
+                autor = User.objects.get(pk=nickname)
+                serializer.save(autor=autor)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            except User.DoesNotExist:
+                return Response({"error": "Usuário não encontrado"}, status=status.HTTP_404_NOT_FOUND)
+                
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
